@@ -19,66 +19,28 @@
             font-family: Arial, sans-serif;
             color: white;
         }
-        #container {
-            text-align: center;
-        }
         canvas {
             width: 512px;
             height: 480px;
             image-rendering: pixelated;
             image-rendering: crisp-edges;
-            border: 2px solid #333;
+            border: 2px solid #222;
         }
-        #play-btn {
-            margin-top: 15px;
-            padding: 12px 24px;
-            font-size: 18px;
+        #start-btn {
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 20px;
             background-color: #e52521;
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <div id="container">
-        <canvas id="nes-canvas" width="256" height="240"></canvas>
-        <br>
-        <button id="play-btn">Haz clic para iniciar el juego (1x)</button>
-    </div>
+    <canvas id="nes-canvas" width="256" height="240"></canvas>
+    <button id="start-btn">▶ CLIC AQUÍ PARA ARRANCAR</button>
 
-    <!-- Usamos un CDN alternativo altamente estable de JSNES -->
-    <script src="https://cdn.jsdelivr.net/npm/jsnes@1.2.0/dist/jsnes.min.js"></script>
-    <script>
-        const canvas = document.getElementById('nes-canvas');
-        const ctx = canvas.getContext('2d');
-        const imageData = ctx.createImageData(256, 240);
-        const playBtn = document.getElementById('play-btn');
-
-        let nes;
-
-        playBtn.addEventListener('click', () => {
-            playBtn.style.display = 'none';
-
-            // Contexto de audio obligatorio para mantener el reloj a velocidad real 1x
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-            nes = new jsnes.NES({
-                onFrame: function(frameBuffer) {
-                    for (let i = 0; i < frameBuffer.length; i++) {
-                        let pixel = frameBuffer[i];
-                        imageData.data[i * 4]     = (pixel & 0xFF0000) >> 16;
-                        imageData.data[i * 4 + 1] = (pixel & 0x00FF00) >> 8;
-                        imageData.data[i * 4 + 2] = (pixel & 0x0000FF);
-                        imageData.data[i * 4 + 3] = 255;
-                    }
-                    ctx.putImageData(imageData, 0, 0);
-                },
-                onAudioSample: function(left, right) {
-                    // El audio actúa como sincronizador maestro de velocidad natural
-                }
-            });
-
-            // Carga directa mediante jsDelivr para
+    <script src="
