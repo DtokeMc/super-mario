@@ -1,40 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Mario Bros</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-        #nes-container {
-            width: 512px;
-            height: 480px;
-        }
-        canvas {
-            width: 100%;
-            height: 100%;
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
-        }
-    </style>
-</head>
-<body>
-    <div id="nes-container">
-        <canvas id="nes-canvas" width="256" height="240"></canvas>
-    </div>
-
-    <!-- Librería estable de JSNES -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsnes/0.2.0/jsnes.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsnes/0.2.0/jsnes.min.js"></script>
     <script>
         const canvas = document.getElementById('nes-canvas');
         const ctx = canvas.getContext('2d');
@@ -54,7 +18,6 @@
             onAudioSample: function(left, right) {}
         });
 
-        // Usamos una ruta directa codificada o alternativa para evitar bloqueos de fetch local en GitHub Pages
         const romUrl = 'https://raw.githubusercontent.com/dtokemc/super-mario/main/roms/super-mario-bros.nes';
 
         fetch(romUrl)
@@ -69,3 +32,19 @@
                     rom += String.fromCharCode(data[i]);
                 }
                 nes.loadROM(rom);
+
+                // Bucle definitivo a velocidad real exacta (1x / ~60 FPS) usando setInterval puro
+                // Esto evita por completo que el monitor o el navegador aceleren el motor.
+                setInterval(() => {
+                    nes.frame();
+                }, 1000 / 60.0988);
+            })
+            .catch(err => {
+                console.error("Error crítico:", err);
+            });
+
+        // Controles de teclado
+        window.addEventListener('keydown', e => {
+            if (e.key === 'ArrowUp') nes.buttonDown(1, jsnes.Controller.BUTTON_UP);
+            if (e.key === 'ArrowDown') nes.buttonDown(1, jsnes.Controller.BUTTON_DOWN);
+            if (e.key === 'ArrowLeft') nes.buttonDown(1, jsnes
