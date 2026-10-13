@@ -12,33 +12,20 @@
             height: 100%;
             background-color: #000;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            font-family: sans-serif;
         }
-        #game-container {
-            width: 100vw;
-            height: 100vh;
+        #nes-container {
+            width: 512px;
+            height: 480px;
         }
-    </style>
-</head>
-<body>
-    <div id="game-container"></div>
-
-    <script type="text/javascript">
-        window.EJS_player = '#game-container';
-        window.EJS_core = 'nes';
-        window.EJS_gameUrl = 'https://raw.githubusercontent.com/dtokemc/super-mario/main/roms/super-mario-bros.nes';
-        window.EJS_pathtodata = 'https://cdn.jsdelivr.net/npm/emulatorjs@3.4.2/data/';
-        window.EJS_color = '#000000';
-        window.EJS_startOnLoaded = true;
-        
-        // Parámetros críticos para bloquear la aceleración de velocidad
-        window.EJS_threads = false;
-        window.EJS_fixedTimeStep = true;
-        window.EJS_disableDatabases = true;
-        window.EJS_volume = 1.0;
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/emulatorjs@3.4.2/data/loader.js"></script>
-</body>
-</html>
+        canvas {
+            width: 100%;
+            height: 100%;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+        #start-btn {
