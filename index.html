@@ -30,11 +30,12 @@
         EJS_core = 'nes';
         EJS_gameUrl = 'roms/super-mario-bros.nes';
         EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
-        EJS_startOnLoaded = false;
         EJS_color = '#209cee';
-        // Forzar velocidad normal y sincronización de cuadros
+        
+        // Configuración para corregir la velocidad (Forzar 60 FPS estables)
+        EJS_startOnLoaded = false; // Exigido por el navegador para activar el audio con el clic
         EJS_disableSpeedLimit = false;
-        EJS_threads = true;
+        EJS_gameFrameRate = 60.0988; // Tasa de refresco exacta de la NES original
     </script>
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 
