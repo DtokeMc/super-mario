@@ -32,11 +32,12 @@
         EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
         EJS_color = '#209cee';
         EJS_startOnLoaded = false;
-
-        // Configuración para limitar la velocidad a los 60 FPS normales y sincronizar audio
+        
+        // Parámetros estrictos para bloquear la velocidad a 60 FPS y sincronizar audio
         EJS_settings = {
-            "snes_emulate_audio_jitter": "true",
-            "rewind_enable": "false"
+            "fps": "60",
+            "cores_enforce_fps": "true",
+            "audio_latency": "64"
         };
     </script>
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
