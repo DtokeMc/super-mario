@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Mario Bros</title>
+    <title>Super Mario Bros - NES</title>
     <style>
         body, html {
             margin: 0;
@@ -11,19 +11,93 @@
             width: 100%;
             height: 100%;
             background-color: #000;
-            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
-        iframe {
-            width: 100vw;
-            height: 100vh;
-            border: none;
+        #mario-container {
+            width: 256px;
+            height: 240px;
+            transform: scale(3);
+            transform-origin: center;
+        }
+        canvas {
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
         }
     </style>
 </head>
 <body>
-    <iframe src="https://emupedia.net/emupedia-game-super-mario-bros/" allowfullscreen="true" scrolling="no"></iframe>
+    <div id="mario-container">
+        <canvas id="nes-canvas" width="256" height="240"></canvas>
+    </div>
+
+    <!-- Librerías estables para control estricto de 60 FPS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsnes/0.2.0/jsnes.min.js"></script>
+    <script>
+        var nes;
+        window.onload = function() {
+            nes = new jsnes.NES({
+                onFrame: function(frameBuffer) {
+                    var canvas = document.getElementById('nes-canvas');
+                    var ctx = canvas.getContext('2d');
+                    var imageData = ctx.createImageData(256, 240);
+                    for (var i = 0; i < frameBuffer.length; i++) {
+                        var pixel = frameBuffer[i];
+                        imageData.data[i * 4] = (pixel & 0xFF0000) >> 16;
+                        imageData.data[i * 4 + 1] = (pixel & 0x00FF00) >> 8;
+                        imageData.data[i * 4 + 2] = (pixel & 0x0000FF);
+                        imageData.data[i * 4 + 3] = 255;
+                    }
+                    ctx.putImageData(imageData, 0, 0);
+                },
+                onAudioSample: function(left, right) {
+                    // Sincronización nativa de audio
+                }
+            });
+
+            // Carga de la ROM desde tu repositorio
+            var req = new XMLHttpRequest();
+            req.open('GET', 'roms/super-mario-bros.nes', true);
+            req.responseType = 'arraybuffer';
+            req.onload = function() {
+                var buffer = req.response;
+                var byteArray = new Uint8Array(buffer);
+                nes.loadROM(String.fromCharCode.apply(null, byteArray));
+                
+                // Bucle de renderizado fijo a 60 FPS reales
+                setInterval(function() {
+                    nes.frame();
+                }, 1000 / 60);
+            };
+            req.send();
+        };
+
+        // Controles de teclado básicos (Flechas y Z/X)
+        window.addEventListener('keydown', (event) => {
+            if (!nes) return;
+            if (event.key === 'ArrowUp') nes.buttonDown(1, jsnes.Controller.BUTTON_UP);
+            if (event.key === 'ArrowDown') nes.buttonDown(1, jsnes.Controller.BUTTON_DOWN);
+            if (event.key === 'ArrowLeft') nes.buttonDown(1, jsnes.Controller.BUTTON_LEFT);
+            if (event.key === 'ArrowRight') nes.buttonDown(1, jsnes.Controller.BUTTON_RIGHT);
+            if (event.key === 'z' || event.key === 'Z') nes.buttonDown(1, jsnes.Controller.BUTTON_A);
+            if (event.key === 'x' || event.key === 'X') nes.buttonDown(1, jsnes.Controller.BUTTON_B);
+            if (event.key === 'Enter') nes.buttonDown(1, jsnes.Controller.BUTTON_START);
+            if (event.key === 'Shift') nes.buttonDown(1, jsnes.Controller.BUTTON_SELECT);
+        });
+
+        window.addEventListener('keyup', (event) => {
+            if (!nes) return;
+            if (event.key === 'ArrowUp') nes.buttonUp(1, jsnes.Controller.BUTTON_UP);
+            if (event.key === 'ArrowDown') nes.buttonUp(1, jsnes.Controller.BUTTON_DOWN);
+            if (event.key === 'ArrowLeft') nes.buttonUp(1, jsnes.Controller.BUTTON_LEFT);
+            if (event.key === 'ArrowRight') nes.buttonUp(1, jsnes.Controller.BUTTON_RIGHT);
+            if (event.key === 'z' || event.key === 'Z') nes.buttonUp(1, jsnes.Controller.BUTTON_A);
+            if (event.key === 'x' || event.key === 'X') nes.buttonUp(1, jsnes.Controller.BUTTON_B);
+            if (event.key === 'Enter') nes.buttonUp(1, jsnes.Controller.BUTTON_START);
+            if (event.key === 'Shift') nes.buttonUp(1, jsnes.Controller.BUTTON_SELECT);
+        });
+    </script>
 </body>
 </html>
