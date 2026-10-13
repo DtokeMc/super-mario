@@ -27,7 +27,6 @@
     <div id="game"></div>
 
     <script type="text/javascript">
-        // Configuración de EmulatorJS
         window.EJS_player = '#game';
         window.EJS_core = 'nes';
         window.EJS_gameUrl = 'roms/super-mario-bros.nes';
@@ -35,15 +34,13 @@
         window.EJS_startOnLoaded = false;
         window.EJS_color = '#209cee';
 
-        // Evitar problemas relacionados con la ejecución en varios hilos
+        // Desactivar los hilos del emulador
         window.EJS_threads = false;
 
-        // Mantener la velocidad normal del emulador
-        window.EJS_defaultOptions = {
-            'vsync': 'enabled',
-            'fps': '60'
-        };
+        // Evitar cargar configuraciones guardadas anteriormente
+        window.EJS_disableLocalStorage = true;
     </script>
+
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 </body>
 </html>
