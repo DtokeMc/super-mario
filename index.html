@@ -33,12 +33,9 @@
         EJS_color = '#209cee';
         EJS_startOnLoaded = false;
         
-        // Parámetros estrictos para bloquear la velocidad a 60 FPS y sincronizar audio
-        EJS_settings = {
-            "fps": "60",
-            "cores_enforce_fps": "true",
-            "audio_latency": "64"
-        };
+        // Forzar límite estricto de velocidad a 60 FPS reales y sincronización
+        EJS_fixedFPS = 60;
+        EJS_disableSpeedLimit = false;
     </script>
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 
