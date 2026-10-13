@@ -11,19 +11,92 @@
             width: 100%;
             height: 100%;
             background-color: #000;
-            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
-        iframe {
-            width: 100vw;
-            height: 100vh;
-            border: none;
+        #emulator-container {
+            width: 256px;
+            height: 240px;
+            transform: scale(3.5);
+            transform-origin: center;
+        }
+        canvas {
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
 <body>
-    <iframe src="https://emupedia.net/emupedia-game-super-mario-bros/" allowfullscreen="true" scrolling="no" allow="autoplay; fullscreen; gamepad"></iframe>
-</body>
-</html>
+    <div id="emulator-container">
+        <canvas id="nes-canvas" width="256" height="240"></canvas>
+    </div>
+
+    <!-- Cargamos JSNES desde un CDN estable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsnes/0.2.0/jsnes.min.js"></script>
+    <script>
+        const canvas = document.getElementById('nes-canvas');
+        const ctx = canvas.getContext('2d');
+        const imageData = ctx.createImageData(256, 240);
+
+        const nes = new jsnes.NES({
+            onFrame: function(frameBuffer) {
+                for (let i = 0; i < frameBuffer.length; i++) {
+                    let pixel = frameBuffer[i];
+                    imageData.data[i * 4]     = (pixel & 0xFF0000) >> 16;
+                    imageData.data[i * 4 + 1] = (pixel & 0x00FF00) >> 8;
+                    imageData.data[i * 4 + 2] = (pixel & 0x0000FF);
+                    imageData.data[i * 4 + 3] = 255;
+                }
+                ctx.putImageData(imageData, 0, 0);
+            },
+            onAudioSample: function(left, right) {}
+        });
+
+        // Carga tu ROM local con fetch asegurando compatibilidad con GitHub Pages
+        fetch('roms/super-mario-bros.nes')
+            .then(response => {
+                if (!response.ok) throw new Error('Error al cargar el archivo de la ROM');
+                return response.arrayBuffer();
+            })
+            .then(buffer => {
+                const data = new Uint8Array(buffer);
+                let rom = '';
+                for (let i = 0; i < data.length; i++) {
+                    rom += String.fromCharCode(data[i]);
+                }
+                nes.loadROM(rom);
+
+                // Bucle maestro estricto bloqueado a 60 FPS reales (16.6 ms por fotograma)
+                // Esto frena por completo el problema de la velocidad x2 de los monitores modernos
+                const fps = 60;
+                const interval = 1000 / fps;
+                let lastTime = performance.now();
+
+                function runEmulation(currentTime) {
+                    requestAnimationFrame(runEmulation);
+                    const delta = currentTime - lastTime;
+                    if (delta >= interval) {
+                        lastTime = currentTime - (delta % interval);
+                        nes.frame();
+                    }
+                }
+                requestAnimationFrame(runEmulation);
+            })
+            .catch(error => {
+                console.error("No se pudo iniciar el emulador:", error);
+            });
+
+        // Controles del teclado (Flechas, Z, X, Enter, Shift)
+        window.addEventListener('keydown', (e) => {
+            if (!nes) return;
+            if (e.key === 'ArrowUp') nes.buttonDown(1, jsnes.Controller.BUTTON_UP);
+            if (e.key === 'ArrowDown') nes.buttonDown(1, jsnes.Controller.BUTTON_DOWN);
+            if (e.key === 'ArrowLeft') nes.buttonDown(1, jsnes.Controller.BUTTON_LEFT);
+            if (e.key === 'ArrowRight') nes.buttonDown(1, jsnes.Controller.BUTTON_RIGHT);
+            if (e.key === 'z' || e.key === 'Z') nes.buttonDown(1, jsnes.Controller.BUTTON_A);
+            if (e.key === 'x' || e.key === 'X') nes.buttonDown(1, jsnes.Controller.BUTTON_B);
+            if (e.key === 'Enter') nes.buttonDown(1, jsnes.Controller.
