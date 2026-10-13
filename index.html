@@ -16,7 +16,7 @@
             align-items: center;
             overflow: hidden;
         }
-        #emulator-container {
+        #game-container {
             width: 256px;
             height: 240px;
             transform: scale(3.5);
@@ -31,20 +31,21 @@
     </style>
 </head>
 <body>
-    <div id="emulator-container">
+    <div id="game-container">
         <canvas id="nes-canvas" width="256" height="240"></canvas>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsnes/0.2.0/jsnes.min.js"></script>
     <script>
-        var nes = new jsnes.NES({
+        const canvas = document.getElementById('nes-canvas');
+        const ctx = canvas.getContext('2d');
+        const imageData = ctx.createImageData(256, 240);
+
+        const nes = new jsnes.NES({
             onFrame: function(frameBuffer) {
-                var canvas = document.getElementById('nes-canvas');
-                var ctx = canvas.getContext('2d');
-                var imageData = ctx.createImageData(256, 240);
-                for (var i = 0; i < frameBuffer.length; i++) {
-                    var pixel = frameBuffer[i];
-                    imageData.data[i * 4] = (pixel & 0xFF0000) >> 16;
+                for (let i = 0; i < frameBuffer.length; i++) {
+                    let pixel = frameBuffer[i];
+                    imageData.data[i * 4]     = (pixel & 0xFF0000) >> 16;
                     imageData.data[i * 4 + 1] = (pixel & 0x00FF00) >> 8;
                     imageData.data[i * 4 + 2] = (pixel & 0x0000FF);
                     imageData.data[i * 4 + 3] = 255;
@@ -54,26 +55,36 @@
             onAudioSample: function(left, right) {}
         });
 
-        var request = new XMLHttpRequest();
-        request.open('GET', 'roms/super-mario-bros.nes', true);
-        request.responseType = 'arraybuffer';
-        request.onload = function() {
-            var data = request.response;
-            var bytes = new Uint8Array(data);
-            var romString = "";
-            for (var i = 0; i < bytes.byteLength; i++) {
-                romString += String.fromCharCode(bytes[i]);
-            }
-            nes.loadROM(romString);
-            
-            // Reloj estricto de 60 FPS por milisegundos reales
-            setInterval(function() {
-                nes.frame();
-            }, 1000 / 60);
-        };
-        request.send();
+        // Carga de la ROM con manejo seguro de errores y sincronización estricta de 60 FPS
+        fetch('roms/super-mario-bros.nes')
+            .then(response => {
+                if (!response.ok) throw new Error('No se pudo cargar la ROM');
+                return response.arrayBuffer();
+            })
+            .then(buffer => {
+                const data = new Uint8Array(buffer);
+                let rom = '';
+                for (let i = 0; i < data.length; i++) {
+                    rom += String.fromCharCode(data[i]);
+                }
+                nes.loadROM(rom);
 
+                // Bucle de tiempo fijo a 60 FPS reales (evita la aceleración x2 de los hercios del monitor)
+                setInterval(() => {
+                    nes.frame();
+                }, 1000 / 60);
+            })
+            .catch(err => {
+                console.error("Error al cargar el juego:", err);
+            });
+
+        // Controles de teclado
         window.addEventListener('keydown', (e) => {
-            if (!nes) return;
             if (e.key === 'ArrowUp') nes.buttonDown(1, jsnes.Controller.BUTTON_UP);
-            if (e.key === 'ArrowDown') nes.buttonDown(1, jsnes.Controller.BUTTON
+            if (e.key === 'ArrowDown') nes.buttonDown(1, jsnes.Controller.BUTTON_DOWN);
+            if (e.key === 'ArrowLeft') nes.buttonDown(1, jsnes.Controller.BUTTON_LEFT);
+            if (e.key === 'ArrowRight') nes.buttonDown(1, jsnes.Controller.BUTTON_RIGHT);
+            if (e.key === 'z' || e.key === 'Z') nes.buttonDown(1, jsnes.Controller.BUTTON_A);
+            if (e.key === 'x' || e.key === 'X') nes.buttonDown(1, jsnes.Controller.BUTTON_B);
+            if (e.key === 'Enter') nes.buttonDown(1, jsnes.Controller.BUTTON_START);
+            if (e.key ===
