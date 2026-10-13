@@ -19,7 +19,7 @@
         #emulator-container {
             width: 256px;
             height: 240px;
-            transform: scale(3.2);
+            transform: scale(3.5);
             transform-origin: center;
         }
         canvas {
@@ -35,7 +35,6 @@
         <canvas id="nes-canvas" width="256" height="240"></canvas>
     </div>
 
-    <!-- Librería limpia de JSNES sin dependencias de CDN externas rotas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsnes/0.2.0/jsnes.min.js"></script>
     <script>
         var nes = new jsnes.NES({
@@ -52,12 +51,9 @@
                 }
                 ctx.putImageData(imageData, 0, 0);
             },
-            onAudioSample: function(left, right) {
-                // Audio controlado
-            }
+            onAudioSample: function(left, right) {}
         });
 
-        // Carga directa de la ROM local
         var request = new XMLHttpRequest();
         request.open('GET', 'roms/super-mario-bros.nes', true);
         request.responseType = 'arraybuffer';
@@ -70,24 +66,13 @@
             }
             nes.loadROM(romString);
             
-            // Bucle estricto a 60 FPS reales (16.6 ms por frame) bloqueado por software
-            const fps = 60;
-            const interval = 1000 / fps;
-            let lastTime = performance.now();
-
-            function runEmulation(currentTime) {
-                requestAnimationFrame(runEmulation);
-                const delta = currentTime - lastTime;
-                if (delta >= interval) {
-                    lastTime = currentTime - (delta % interval);
-                    nes.frame();
-                }
-            }
-            requestAnimationFrame(runEmulation);
+            // Reloj estricto de 60 FPS por milisegundos reales
+            setInterval(function() {
+                nes.frame();
+            }, 1000 / 60);
         };
         request.send();
 
-        // Controles de teclado
         window.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowUp') nes.buttonDown(1, jsnes.Controller.BUTTON_UP);
             if (e.key === 'ArrowDown') nes.buttonDown(1, jsnes.Controller.BUTTON_DOWN);
@@ -96,7 +81,7 @@
             if (e.key === 'z' || e.key === 'Z') nes.buttonDown(1, jsnes.Controller.BUTTON_A);
             if (e.key === 'x' || e.key === 'X') nes.buttonDown(1, jsnes.Controller.BUTTON_B);
             if (e.key === 'Enter') nes.buttonDown(1, jsnes.Controller.BUTTON_START);
-            if (e.key === 'Shift') nes.buttonDown(1, jsnes.Controller.BUTTON_SELECT);
+            if.key === 'Shift' && nes.buttonDown(1, jsnes.Controller.BUTTON_SELECT);
         });
 
         window.addEventListener('keyup', (e) => {
@@ -107,7 +92,6 @@
             if (e.key === 'z' || e.key === 'Z') nes.buttonUp(1, jsnes.Controller.BUTTON_A);
             if (e.key === 'x' || e.key === 'X') nes.buttonUp(1, jsnes.Controller.BUTTON_B);
             if (e.key === 'Enter') nes.buttonUp(1, jsnes.Controller.BUTTON_START);
-            if (e.key === 'Shift') nes.buttonUp(1, jsnes.Controller.BUTTON_SELECT);
         });
     </script>
 </body>
