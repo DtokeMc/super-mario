@@ -22,7 +22,6 @@
 </head>
 <body>
     <div id="game"></div>
-
     <script type="text/javascript">
         EJS_player = '#game';
         EJS_core = 'nes';
@@ -32,14 +31,9 @@
         EJS_startOnLoaded = true;
 
         EJS_threads = false;
+        EJS_fixedTimeStep = true;
         EJS_disableDatabases = true;
-
-        // Solicitar velocidad normal
-        EJS_defaultOptions = {
-            'fastforward_ratio': '1.0'
-        };
     </script>
-
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 </body>
 </html>
