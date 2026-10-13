@@ -5,83 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Super Mario Bros</title>
     <style>
-        body, html {
+        html, body {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
             background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             overflow: hidden;
         }
-        canvas {
-            width: 512px;
-            height: 480px;
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
+        #game {
+            width: 100vw;
+            height: 100vh;
         }
     </style>
 </head>
 <body>
-    <canvas id="nes-canvas" width="256" height="240"></canvas>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsnes/0.2.0/jsnes.min.js"></script>
-    <script>
-        const canvas = document.getElementById('nes-canvas');
-        const ctx = canvas.getContext('2d');
-        const imageData = ctx.createImageData(256, 240);
-
-        const nes = new jsnes.NES({
-            onFrame: function(frameBuffer) {
-                for (let i = 0; i < frameBuffer.length; i++) {
-                    let pixel = frameBuffer[i];
-                    imageData.data[i * 4]     = (pixel & 0xFF0000) >> 16;
-                    imageData.data[i * 4 + 1] = (pixel & 0x00FF00) >> 8;
-                    imageData.data[i * 4 + 2] = (pixel & 0x0000FF);
-                    imageData.data[i * 4 + 3] = 255;
-                }
-                ctx.putImageData(imageData, 0, 0);
-            },
-            onAudioSample: function(left, right) {}
-        });
-
-        fetch('roms/super-mario-bros.nes')
-            .then(res => {
-                if (!res.ok) throw new Error("No se encontró la ROM en roms/super-mario-bros.nes");
-                return res.arrayBuffer();
-            })
-            .then(buffer => {
-                const data = new Uint8Array(buffer);
-                let rom = '';
-                for (let i = 0; i < data.length; i++) {
-                    rom += String.fromCharCode(data[i]);
-                }
-                nes.loadROM(rom);
-
-                // Control estricto de velocidad real a 60 FPS mediante tiempo transcurrido
-                let lastTime = window.performance.now();
-                const fps = 60.0988; // Tasa exacta de refresco de la NES original
-                const frameTime = 1000 / fps;
-                let lag = 0;
-
-                function gameLoop(now) {
-                    window.requestAnimationFrame(gameLoop);
-                    let elapsed = now - lastTime;
-                    lastTime = now;
-                    lag += elapsed;
-
-                    while (lag >= frameTime) {
-                        nes.frame();
-                        lag -= frameTime;
-                    }
-                }
-                window.requestAnimationFrame(gameLoop);
-            })
-            .catch(err => console.error(err));
-
-        // Controles básicos
-        window.addEventListener('keydown', e => {
-            if (e.key === 'ArrowUp') nes.buttonDown(1, jsnes.Controller.BUTTON_UP);
-            if (e.key === 'ArrowDown') nes
+    <div id="game"></div>
+    <script type="text/javascript">
+        window.EJS_player = '#game';
+        window.EJS_core = 'nes';
+        window.EJS_gameUrl = 'https://raw.githubusercontent.com/RetroAchievements/ROMSet/main/NES/Super%20Mario%20Bros.%20(World).nes';
+        window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+        window.EJS_color = '#000000';
+        window.EJS_startOnLoaded = true;
+        
+        // Forzar tasa fija para evitar el x2
+        window.EJS_threads = false;
+        window.EJS_fixedTimeStep = true;
+        window.EJS_disableDatabases = true;
+    </script>
+    <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
+</body>
+</html>
