@@ -1,4 +1,39 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jsnes/0.2.0/jsnes.min.js"></script>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Mario Bros</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        #nes-container {
+            width: 512px;
+            height: 480px;
+        }
+        canvas {
+            width: 100%;
+            height: 100%;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+    </style>
+</head>
+<body>
+    <div id="nes-container">
+        <canvas id="nes-canvas" width="256" height="240"></canvas>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsnes/0.2.0/jsnes.min.js"></script>
     <script>
         const canvas = document.getElementById('nes-canvas');
         const ctx = canvas.getContext('2d');
@@ -15,16 +50,15 @@
                 }
                 ctx.putImageData(imageData, 0, 0);
             },
-            onAudioSample: function(left, right) {}
+            onAudioSample: function(left, right) {
+                // Desactivamos el muestreo libre para evitar desincronización de reloj
+            }
         });
 
         const romUrl = 'https://raw.githubusercontent.com/dtokemc/super-mario/main/roms/super-mario-bros.nes';
 
         fetch(romUrl)
-            .then(res => {
-                if (!res.ok) throw new Error("Error al descargar la ROM");
-                return res.arrayBuffer();
-            })
+            .then(res => res.arrayBuffer())
             .then(buffer => {
                 const data = new Uint8Array(buffer);
                 let rom = '';
@@ -33,18 +67,15 @@
                 }
                 nes.loadROM(rom);
 
-                // Bucle definitivo a velocidad real exacta (1x / ~60 FPS) usando setInterval puro
-                // Esto evita por completo que el monitor o el navegador aceleren el motor.
-                setInterval(() => {
-                    nes.frame();
-                }, 1000 / 60.0988);
-            })
-            .catch(err => {
-                console.error("Error crítico:", err);
-            });
+                // Control estricto de reloj maestro con bloqueo de solapamiento
+                let intervalTime = 1000 / 60; // 60 FPS limpios
+                let running = true;
 
-        // Controles de teclado
-        window.addEventListener('keydown', e => {
-            if (e.key === 'ArrowUp') nes.buttonDown(1, jsnes.Controller.BUTTON_UP);
-            if (e.key === 'ArrowDown') nes.buttonDown(1, jsnes.Controller.BUTTON_DOWN);
-            if (e.key === 'ArrowLeft') nes.buttonDown(1, jsnes
+                function step() {
+                    if (!running) return;
+                    let start = performance.now();
+                    
+                    nes.frame();
+                    
+                    let elapsed = performance.now() - start;
+                    let delay
