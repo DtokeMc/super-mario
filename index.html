@@ -16,75 +16,29 @@
             align-items: center;
             overflow: hidden;
         }
-        #game-container {
-            width: 256px;
-            height: 240px;
-            transform: scale(3.5);
-            transform-origin: center;
-        }
-        canvas {
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
-            width: 100%;
-            height: 100%;
+        #emulator {
+            width: 100vw;
+            height: 100vh;
         }
     </style>
 </head>
 <body>
-    <div id="game-container">
-        <canvas id="nes-canvas" width="256" height="240"></canvas>
-    </div>
+    <div id="emulator"></div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsnes/0.2.0/jsnes.min.js"></script>
-    <script>
-        const canvas = document.getElementById('nes-canvas');
-        const ctx = canvas.getContext('2d');
-        const imageData = ctx.createImageData(256, 240);
-
-        const nes = new jsnes.NES({
-            onFrame: function(frameBuffer) {
-                for (let i = 0; i < frameBuffer.length; i++) {
-                    let pixel = frameBuffer[i];
-                    imageData.data[i * 4]     = (pixel & 0xFF0000) >> 16;
-                    imageData.data[i * 4 + 1] = (pixel & 0x00FF00) >> 8;
-                    imageData.data[i * 4 + 2] = (pixel & 0x0000FF);
-                    imageData.data[i * 4 + 3] = 255;
-                }
-                ctx.putImageData(imageData, 0, 0);
-            },
-            onAudioSample: function(left, right) {}
-        });
-
-        // Carga de la ROM con manejo seguro de errores y sincronización estricta de 60 FPS
-        fetch('roms/super-mario-bros.nes')
-            .then(response => {
-                if (!response.ok) throw new Error('No se pudo cargar la ROM');
-                return response.arrayBuffer();
-            })
-            .then(buffer => {
-                const data = new Uint8Array(buffer);
-                let rom = '';
-                for (let i = 0; i < data.length; i++) {
-                    rom += String.fromCharCode(data[i]);
-                }
-                nes.loadROM(rom);
-
-                // Bucle de tiempo fijo a 60 FPS reales (evita la aceleración x2 de los hercios del monitor)
-                setInterval(() => {
-                    nes.frame();
-                }, 1000 / 60);
-            })
-            .catch(err => {
-                console.error("Error al cargar el juego:", err);
-            });
-
-        // Controles de teclado
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowUp') nes.buttonDown(1, jsnes.Controller.BUTTON_UP);
-            if (e.key === 'ArrowDown') nes.buttonDown(1, jsnes.Controller.BUTTON_DOWN);
-            if (e.key === 'ArrowLeft') nes.buttonDown(1, jsnes.Controller.BUTTON_LEFT);
-            if (e.key === 'ArrowRight') nes.buttonDown(1, jsnes.Controller.BUTTON_RIGHT);
-            if (e.key === 'z' || e.key === 'Z') nes.buttonDown(1, jsnes.Controller.BUTTON_A);
-            if (e.key === 'x' || e.key === 'X') nes.buttonDown(1, jsnes.Controller.BUTTON_B);
-            if (e.key === 'Enter') nes.buttonDown(1, jsnes.Controller.BUTTON_START);
-            if (e.key ===
+    <script type="text/javascript">
+        // Configuración directa y limpia de EmulatorJS con control de velocidad estricto
+        window.EJS_player = '#emulator';
+        window.EJS_core = 'nes';
+        window.EJS_gameUrl = 'roms/super-mario-bros.nes';
+        window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+        window.EJS_color = '#000000';
+        window.EJS_startOnLoaded = true;
+        
+        // Forzar 60 FPS fijos y desactivar multihilo para evitar la aceleración x2
+        window.EJS_threads = false;
+        window.EJS_fixedTimeStep = true;
+        window.EJS_disableDatabases = true;
+    </script>
+    <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
+</body>
+</html>
