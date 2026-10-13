@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,42 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Super Mario Bros</title>
     <style>
-        body, html {
+        html, body {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
             background-color: #000;
             overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
-        #game {
-            width: 100%;
-            height: 100%;
+        #game-container {
+            width: 100vw;
+            height: 100vh;
         }
     </style>
 </head>
 <body>
-    <div id="game"></div>
+
+    <div id="game-container">
+        <div id="game"></div>
+    </div>
 
     <script type="text/javascript">
-        window.EJS_player = '#game';
-        window.EJS_core = 'nes';
-        window.EJS_gameUrl = 'roms/super-mario-bros.nes';
-        window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
-        window.EJS_startOnLoaded = false;
-        window.EJS_color = '#209cee';
-
-        // Desactivar los hilos del emulador
-        window.EJS_threads = false;
-
-        // Evitar cargar configuraciones guardadas anteriormente
-        window.EJS_disableLocalStorage = true;
+        EJS_player = '#game';
+        EJS_core = 'nes';
+        EJS_gameUrl = 'roms/super-mario-bros.nes';
+        EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+        EJS_color = '#209cee';
+        EJS_startOnLoaded = false;
+        
+        // Forzar limitación estricta de velocidad interna para evitar el efecto x2
+        EJS_disableSpeedLimit = false;
+        EJS_bios = '';
     </script>
-
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
+
 </body>
 </html>
-```
