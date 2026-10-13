@@ -28,8 +28,11 @@
         EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
         EJS_color = '#000000';
         EJS_startOnLoaded = true;
-        // Forzar límite de velocidad nativo a 1x (60 FPS)
-        EJS_fps = 60;
+        
+        // Ajustes para bloquear la velocidad x2 y sincronizar a 1x real
+        EJS_threads = false;
+        EJS_fixedTimeStep = true;
+        EJS_disableDatabases = true;
     </script>
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 </body>
