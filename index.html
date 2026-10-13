@@ -12,45 +12,28 @@
             height: 100%;
             background-color: #000;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            color: white;
-            font-family: sans-serif;
         }
-        #nes-canvas {
-            width: 512px;
-            height: 480px;
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
-            background: #000;
-        }
-        #loading {
-            position: absolute;
-            font-size: 18px;
-            color: #fff;
+        #game {
+            width: 100vw;
+            height: 100vh;
         }
     </style>
 </head>
 <body>
-    <div id="loading">Cargando Super Mario Bros...</div>
-    <canvas id="nes-canvas" width="256" height="240"></canvas>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsnes/0.2.0/jsnes.min.js"></script>
-    <script>
-        const canvas = document.getElementById('nes-canvas');
-        const ctx = canvas.getContext('2d');
-        const loading = document.getElementById('loading');
-        const imageData = ctx.createImageData(256, 240);
-
-        const nes = new jsnes.NES({
-            onFrame: function(frameBuffer) {
-                for (let i = 0; i < frameBuffer.length; i++) {
-                    let pixel = frameBuffer[i];
-                    imageData.data[i * 4]     = (pixel & 0xFF0000) >> 16;
-                    imageData.data[i * 4 + 1] = (pixel & 0x00FF00) >> 8;
-                    imageData.data[i * 4 + 2] = (pixel & 0x0000FF);
-                    imageData.data[i * 4 + 3] = 255;
-                }
-                ctx.putImageData(imageData, 0, 0
+    <div id="game"></div>
+    <script type="text/javascript">
+        window.EJS_player = '#game';
+        window.EJS_core = 'nes';
+        window.EJS_gameUrl = 'https://raw.githubusercontent.com/dtokemc/super-mario/main/roms/super-mario-bros.nes';
+        window.EJS_pathtodata = 'https://cdn.jsdelivr.net/gh/EmulatorJS/EmulatorJS@main/data/';
+        window.EJS_color = '#000000';
+        window.EJS_startOnLoaded = true;
+        window.EJS_threads = false;
+        window.EJS_fixedTimeStep = true;
+    </script>
+    <script src="https://cdn.jsdelivr.net/gh/EmulatorJS/EmulatorJS@main/data/loader.js"></script>
+</body>
+</html>
