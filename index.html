@@ -74,25 +74,6 @@
         request.send();
 
         window.addEventListener('keydown', (e) => {
+            if (!nes) return;
             if (e.key === 'ArrowUp') nes.buttonDown(1, jsnes.Controller.BUTTON_UP);
-            if (e.key === 'ArrowDown') nes.buttonDown(1, jsnes.Controller.BUTTON_DOWN);
-            if (e.key === 'ArrowLeft') nes.buttonDown(1, jsnes.Controller.BUTTON_LEFT);
-            if (e.key === 'ArrowRight') nes.buttonDown(1, jsnes.Controller.BUTTON_RIGHT);
-            if (e.key === 'z' || e.key === 'Z') nes.buttonDown(1, jsnes.Controller.BUTTON_A);
-            if (e.key === 'x' || e.key === 'X') nes.buttonDown(1, jsnes.Controller.BUTTON_B);
-            if (e.key === 'Enter') nes.buttonDown(1, jsnes.Controller.BUTTON_START);
-            if.key === 'Shift' && nes.buttonDown(1, jsnes.Controller.BUTTON_SELECT);
-        });
-
-        window.addEventListener('keyup', (e) => {
-            if (e.key === 'ArrowUp') nes.buttonUp(1, jsnes.Controller.BUTTON_UP);
-            if (e.key === 'ArrowDown') nes.buttonUp(1, jsnes.Controller.BUTTON_DOWN);
-            if (e.key === 'ArrowLeft') nes.buttonUp(1, jsnes.Controller.BUTTON_LEFT);
-            if (e.key === 'ArrowRight') nes.buttonUp(1, jsnes.Controller.BUTTON_RIGHT);
-            if (e.key === 'z' || e.key === 'Z') nes.buttonUp(1, jsnes.Controller.BUTTON_A);
-            if (e.key === 'x' || e.key === 'X') nes.buttonUp(1, jsnes.Controller.BUTTON_B);
-            if (e.key === 'Enter') nes.buttonUp(1, jsnes.Controller.BUTTON_START);
-        });
-    </script>
-</body>
-</html>
+            if (e.key === 'ArrowDown') nes.buttonDown(1, jsnes.Controller.BUTTON
