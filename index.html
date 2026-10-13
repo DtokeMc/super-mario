@@ -13,16 +13,14 @@
             background-color: #000;
             overflow: hidden;
         }
-        #game-container {
+        #game {
             width: 100vw;
             height: 100vh;
         }
     </style>
 </head>
 <body>
-    <div id="game-container">
-        <div id="game"></div>
-    </div>
+    <div id="game"></div>
     <script type="text/javascript">
         EJS_player = '#game';
         EJS_core = 'nes';
@@ -30,6 +28,7 @@
         EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
         EJS_color = '#209cee';
         EJS_startOnLoaded = true;
+        EJS_threads = false;
     </script>
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 </body>
