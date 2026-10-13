@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -26,17 +27,24 @@
     <div id="game"></div>
 
     <script type="text/javascript">
-        // Forzar la configuración limpia de EmulatorJS evitando aceleraciones de hardware
+        // Configuración de EmulatorJS
         window.EJS_player = '#game';
         window.EJS_core = 'nes';
         window.EJS_gameUrl = 'roms/super-mario-bros.nes';
         window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
         window.EJS_startOnLoaded = false;
         window.EJS_color = '#209cee';
-        
-        // Truco crítico para evitar el x2 de velocidad en monitores de alta tasa de refresco:
+
+        // Evitar problemas relacionados con la ejecución en varios hilos
         window.EJS_threads = false;
+
+        // Mantener la velocidad normal del emulador
+        window.EJS_defaultOptions = {
+            'vsync': 'enabled',
+            'fps': '60'
+        };
     </script>
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 </body>
 </html>
+```
