@@ -1,36 +1,54 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>NES Player — navegador</title>
-<style>
-:root{color-scheme:dark;--bg:#10131a;--panel:#1a202b;--accent:#e64a4a;--text:#f3f5f7;--muted:#aeb8c6}*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#202b3b,var(--bg) 65%);color:var(--text);font:16px system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh;display:flex;justify-content:center;padding:24px 14px}.app{width:min(900px,100%)}header{display:flex;align-items:center;gap:12px;margin-bottom:18px}.logo{width:44px;height:44px;border-radius:12px;background:var(--accent);display:grid;place-items:center;font-size:25px;font-weight:900}h1{font-size:clamp(20px,4vw,29px);margin:0}header p{margin:3px 0 0;color:var(--muted);font-size:13px}.panel{background:var(--panel);border:1px solid #303949;border-radius:18px;padding:clamp(12px,3vw,22px);box-shadow:0 18px 60px #0005}.screen-wrap{background:#050608;border-radius:12px;padding:10px;position:relative}.screen{display:block;width:100%;max-height:65vh;aspect-ratio:256/240;object-fit:contain;image-rendering:pixelated;background:#000}.status{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:13px;margin:14px 0}.actions{display:flex;gap:8px;flex-wrap:wrap}button,.file-label{background:#303a4b;color:white;border:1px solid #465269;border-radius:10px;padding:10px 14px;font:600 14px system-ui;cursor:pointer}button.primary{background:var(--accent);border-color:var(--accent)}button:focus-visible,.file-label:focus-visible{outline:3px solid #fff;outline-offset:2px}.help{color:var(--muted);font-size:13px;line-height:1.55;margin:15px 2px 0}.controls{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-top:18px;user-select:none}.dpad{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(2,44px);gap:5px}.dpad button,.ab button{touch-action:none;padding:0;font-size:20px}.dpad .up{grid-column:2}.dpad .left{grid-column:1;grid-row:2}.dpad .down{grid-column:2;grid-row:2}.dpad .right{grid-column:3;grid-row:2}.ab{display:flex;gap:10px;align-items:center}.ab button{width:54px;height:54px;border-radius:50%;background:#b82d42;border-color:#ed6473}.ab button:last-child{transform:translateY(-12px);background:#3b70bd;border-color:#6ba1f5}.notice{border-left:3px solid #e6b04a;padding:9px 12px;background:#27251e;color:#e9d9b7;border-radius:4px;font-size:13px;line-height:1.5;margin-top:14px}input[type=file]{display:none}@media(min-width:700px){.game-row{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:18px;align-items:center}.controls{display:flex;flex-direction:column;margin:0}.dpad{grid-template-columns:repeat(3,42px);grid-template-rows:repeat(2,40px)}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Super Mario Bros - Web Player</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            max-width: 100%;
+            max-height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
 </head>
-<body><main class="app"><header><div class="logo">8B</div><div><h1>NES Player</h1><p>Emulador retro para navegador · un jugador</p></div></header>
-<section class="panel"><div class="game-row"><div><div class="screen-wrap"><canvas id="screen" class="screen" width="256" height="240" aria-label="Pantalla del juego NES"></canvas></div><div class="status"><span id="status">Cargando emulador…</span><span id="romStatus">ROM: no cargada</span></div><div class="actions"><button class="primary" id="start">Iniciar / reiniciar</button><button id="pause">Pausar</button><button id="fullscreen">Pantalla completa</button><label class="file-label" for="romFile">Probar ROM local</label><input id="romFile" type="file" accept=".nes,application/octet-stream"></div></div>
-<div class="controls" aria-label="Controles táctiles"><div class="dpad"><button class="up" data-key="ArrowUp" aria-label="Arriba">▲</button><button class="left" data-key="ArrowLeft" aria-label="Izquierda">◀</button><button class="down" data-key="ArrowDown" aria-label="Abajo">▼</button><button class="right" data-key="ArrowRight" aria-label="Derecha">▶</button></div><div class="ab"><button data-key="KeyX" aria-label="Botón B">B</button><button data-key="KeyZ" aria-label="Botón A">A</button></div></div></div>
-<p class="help"><b>Teclado:</b> flechas para moverse · Z = A/saltar · X = B · Enter = Start · Shift = Select. En móvil, mantené pulsados los botones táctiles.</p>
-<div class="notice"><b>Falta agregar la ROM:</b> colocá una ROM NES que tengas derecho a alojar en <code>roms/super-mario-bros.nes</code>. No se incluye el juego original en este paquete. Para publicar la página, asegurate de tener autorización para distribuir la ROM; tener una copia no implica automáticamente permiso para alojarla públicamente.</div>
-</section><p class="help">El emulador se carga desde jsDelivr, por lo que la primera apertura necesita conexión a Internet. La ROM se solicita desde tu propio sitio.</p></main>
-<script src="https://cdn.jsdelivr.net/npm/jsnes@1.2.1/dist/jsnes.min.js"></script>
-<script>
-(()=>{'use strict';
-const canvas=document.getElementById('screen'),ctx=canvas.getContext('2d',{alpha:false});ctx.imageSmoothingEnabled=false;
-const statusEl=document.getElementById('status'),romStatus=document.getElementById('romStatus');let nes=null,loaded=false,running=false,raf=0,last=0,acc=0;const frame=ctx.createImageData(256,240);
-function setStatus(s){statusEl.textContent=s}
-function draw(buffer){for(let i=0,j=0;i<buffer.length;i++,j+=4){const p=buffer[i]>>>0;frame.data[j]=(p>>16)&255;frame.data[j+1]=(p>>8)&255;frame.data[j+2]=p&255;frame.data[j+3]=255}ctx.putImageData(frame,0,0)}
-function init(){if(!window.jsnes){setStatus('No se pudo cargar JSNES. Revisá tu conexión.');return false}nes=new jsnes.NES({onFrame:draw,onAudioSample:()=>{}});return true}
-function tick(t){if(!running)return;if(!last)last=t;acc+=Math.min(100,t-last);last=t;while(acc>=16.67){if(loaded)nes.frame();acc-=16.67}raf=requestAnimationFrame(tick)}
-function run(){if(!nes&&!init())return;if(!loaded){setStatus('Emulador listo; falta la ROM.');return}cancelAnimationFrame(raf);running=true;last=0;acc=0;setStatus('Jugando');raf=requestAnimationFrame(tick)}
-function pause(){running=false;cancelAnimationFrame(raf);setStatus(loaded?'Pausado':'Emulador en espera')}
-function loadRom(bytes,name){if(!nes&&!init())return;try{pause();let binary='';for(let i=0;i<bytes.length;i+=0x8000)binary+=String.fromCharCode(...bytes.subarray(i,Math.min(i+0x8000,bytes.length)));nes.loadROM(binary);loaded=true;romStatus.textContent='ROM: '+name;setStatus('ROM cargada');run()}catch(e){loaded=false;setStatus('No se pudo leer la ROM. Verificá que sea una ROM NES válida.');console.error(e)}}
-async function loadHosted(){if(!init())return;try{setStatus('Buscando ROM alojada…');const r=await fetch('./roms/super-mario-bros.nes');if(!r.ok)throw new Error('missing');const b=new Uint8Array(await r.arrayBuffer());loadRom(b,'alojada')}catch(e){setStatus('Emulador listo; falta la ROM alojada.');romStatus.textContent='ROM: no encontrada'}}
-document.getElementById('start').addEventListener('click',()=>{if(loaded){try{nes.reset()}catch(e){}run()}else loadHosted()});document.getElementById('pause').addEventListener('click',()=>running?pause():run());document.getElementById('fullscreen').addEventListener('click',()=>{const target=document.querySelector('.screen-wrap');if(target.requestFullscreen)target.requestFullscreen()});document.getElementById('romFile').addEventListener('change',async e=>{const f=e.target.files[0];if(f)loadRom(new Uint8Array(await f.arrayBuffer()),f.name)});
-function buttonFor(code){const C=window.jsnes&&window.jsnes.Controller;if(!C)return null;return ({ArrowUp:C.BUTTON_UP,ArrowDown:C.BUTTON_DOWN,ArrowLeft:C.BUTTON_LEFT,ArrowRight:C.BUTTON_RIGHT,KeyX:C.BUTTON_B,KeyZ:C.BUTTON_A,Enter:C.BUTTON_START,ShiftLeft:C.BUTTON_SELECT,ShiftRight:C.BUTTON_SELECT})[code]??null}
-function down(code){if(!nes||!loaded)return;const b=buttonFor(code);if(b!==null)nes.buttonDown(1,b)}function up(code){if(!nes||!loaded)return;const b=buttonFor(code);if(b!==null)nes.buttonUp(1,b)}
-window.addEventListener('keydown',e=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();if(!e.repeat)down(e.code);if(e.code==='Enter'&&!loaded)loadHosted()});window.addEventListener('keyup',e=>up(e.code));window.addEventListener('blur',()=>{if(nes&&loaded){for(const k of Object.keys(keyMap))up(k)}});
-document.querySelectorAll('[data-key]').forEach(el=>{const code=el.dataset.key;el.addEventListener('pointerdown',e=>{e.preventDefault();el.setPointerCapture?.(e.pointerId);down(code)});for(const ev of ['pointerup','pointercancel','lostpointercapture'])el.addEventListener(ev,e=>{e.preventDefault();up(code)})});
-loadHosted();
-})();
-</script></body></html>
+<body>
+
+    <div id="game-container">
+        <div id="game"></div>
+    </div>
+
+    <script type="text/javascript">
+        // Ruta exacta a tu archivo ROM en el repositorio
+        EJS_player = '#game';
+        EJS_core = 'nes';
+        EJS_gameUrl = 'roms/super-mario-bros.nes'; // Asegúrate de que tu ROM esté en esta ruta
+        
+        // Ajustes de rendimiento, color y sonido
+        EJS_startOnLoaded = false; // Muestra un botón de play para habilitar el sonido
+        EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+        EJS_color = '#e52521'; // Color temático de Nintendo
+    </script>
+    <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
+
+</body>
+</html>
