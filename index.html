@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Super Mario Bros</title>
     <style>
         html, body {
@@ -28,12 +28,11 @@
     <script type="text/javascript">
         EJS_player = '#game';
         EJS_core = 'nes';
-        EJS_gameUrl = 'roms/super-mario-bros.nes';
+        // CAMBIA 'super-mario-bros.nes' si tu archivo se llama diferente en la carpeta roms
+        EJS_gameUrl = 'roms/super-mario-bros.nes'; 
         EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
         EJS_color = '#209cee';
-        
-        // Iniciar el juego automáticamente sin presionar START GAME
-        EJS_startOnLoaded = true;
+        EJS_startOnLoaded = false;
     </script>
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 
