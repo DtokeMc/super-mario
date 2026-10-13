@@ -28,11 +28,16 @@
     <script type="text/javascript">
         EJS_player = '#game';
         EJS_core = 'nes';
-        // CAMBIA 'super-mario-bros.nes' si tu archivo se llama diferente en la carpeta roms
-        EJS_gameUrl = 'roms/super-mario-bros.nes'; 
+        EJS_gameUrl = 'roms/super-mario-bros.nes';
         EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
         EJS_color = '#209cee';
         EJS_startOnLoaded = false;
+        
+        // Ajustes para corregir la velocidad acelerada
+        EJS_settings = {
+            USE_VSYNC: "true",
+            LIMIT_FPS: "true"
+        };
     </script>
     <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 
