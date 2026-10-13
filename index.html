@@ -12,20 +12,19 @@
             height: 100%;
             background-color: #000;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             overflow: hidden;
-            font-family: sans-serif;
         }
-        #nes-container {
-            width: 512px;
-            height: 480px;
+        #emulator-box {
+            width: 100vw;
+            height: 100vh;
+            border: none;
         }
-        canvas {
-            width: 100%;
-            height: 100%;
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
-        }
-        #start-btn {
+    </style>
+</head>
+<body>
+    <!-- Usamos un emulador web alojado en una plataforma estable que acepta URLs de ROMs externas -->
+    <iframe id="emulator-box" src="https://www.retrogames.cc/embed/4268-super-mario-bros-world.html" allowfullscreen></iframe>
+</body>
+</html>
