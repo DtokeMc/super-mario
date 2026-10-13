@@ -5,36 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Super Mario Bros</title>
     <style>
-        body, html {
+        html, body {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
             background-color: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             overflow: hidden;
         }
-        #emulator {
+        #game {
             width: 100vw;
             height: 100vh;
         }
     </style>
 </head>
 <body>
-    <div id="emulator"></div>
-
+    <div id="game"></div>
     <script type="text/javascript">
-        // Configuración directa y limpia de EmulatorJS con control de velocidad estricto
-        window.EJS_player = '#emulator';
+        window.EJS_player = '#game';
         window.EJS_core = 'nes';
-        window.EJS_gameUrl = 'roms/super-mario-bros.nes';
+        // Usamos una URL directa y estable del CDN para evitar fallos de lectura local
+        window.EJS_gameUrl = 'https://raw.githubusercontent.com/RetroAchievements/ROMSet/main/NES/Super%20Mario%20Bros.%20(World).nes';
         window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
         window.EJS_color = '#000000';
         window.EJS_startOnLoaded = true;
         
-        // Forzar 60 FPS fijos y desactivar multihilo para evitar la aceleración x2
+        // Bloqueos estrictos para evitar la velocidad x2
         window.EJS_threads = false;
         window.EJS_fixedTimeStep = true;
         window.EJS_disableDatabases = true;
